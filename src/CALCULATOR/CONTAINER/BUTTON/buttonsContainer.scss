@@ -1,0 +1,33 @@
+.buttonsContainer {
+  display: flex;
+
+  .mainButtons {
+    min-height: 100%;
+  }
+
+  .sideButtons {
+    display: flex;
+    flex-wrap: wrap;
+
+    width: 10%;
+  }
+}
+
+.numberButtons {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  justify-content: center;
+  align-items: center;
+
+  .numberButtonContainer {
+    width: 33%;
+  }
+
+  .biggerNumberButtonContainer {
+    width: 66%;
+  }
+}
+
+.methodTopButtons {
+  display: flex;
+}
