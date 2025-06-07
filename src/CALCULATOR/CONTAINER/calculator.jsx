@@ -9,7 +9,6 @@ const Calculator = () => {
     <div className="calculator">
       <InputContainer />
       <CalculatorContainer />
-      <ButtonsContainer />
     </div>
   );
 };

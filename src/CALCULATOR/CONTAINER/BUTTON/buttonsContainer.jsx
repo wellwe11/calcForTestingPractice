@@ -3,17 +3,15 @@ import "./buttonsContainer.scss";
 import Button from "./button";
 
 const NumberButtons = () => {
-  const numberButtons = [0, ",", 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
   return (
     <div className="numberButtons">
-      {numberButtons.map((n, i) => (
+      {[...Array(11).keys()].map((n, i) => (
         <span
           className={`${"numberButtonContainer"} ${
             i === 0 ? "biggerNumberButtonContainer" : ""
           }`}
         >
-          <Button key={i}>{n}</Button>
+          <Button key={i}>{i === 1 ? "," : i > 0 ? i - 1 : i}</Button>
         </span>
       ))}
     </div>
