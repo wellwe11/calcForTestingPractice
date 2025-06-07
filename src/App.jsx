@@ -1,13 +1,8 @@
 import "./App.css";
-
-import CalculatorContainer from "./CALCULATOR/CONTAINER/CALC_CONTAINER/container";
+import Calculator from "./CALCULATOR/CONTAINER/calculator";
 
 function App() {
-  return (
-    <div>
-      <CalculatorContainer />
-    </div>
-  );
+  return <Calculator />;
 }
 
 export default App;
