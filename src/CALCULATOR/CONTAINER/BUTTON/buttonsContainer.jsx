@@ -60,7 +60,7 @@ const MethodButtons = ({ handleMethod, equalsClicked }) => {
 const ButtonsContainer = ({ val, setVal }) => {
   const [currentOperator, setCurrentOperator] = useState("");
   const [initialNumber, setInitialNumber] = useState(null);
-  const [history, setHistory] = useState([{}]);
+  const [history, setHistory] = useState([]);
 
   const operations = {
     "+": (a, b) => a + b,
@@ -98,12 +98,15 @@ const ButtonsContainer = ({ val, setVal }) => {
       ...prevHistory,
       {
         value: val,
-        operator: currentOperator,
+        operator: o,
       },
     ]);
-    handleInitialNumber();
     setCurrentOperator(o);
+
+    handleInitialNumber();
   };
+
+  console.log(history);
 
   return (
     <div className="buttonsContainer">
