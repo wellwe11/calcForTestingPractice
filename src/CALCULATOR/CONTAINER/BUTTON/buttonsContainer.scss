@@ -40,6 +40,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  button {
+    background-color: gray;
+  }
 }
 
 .methodTopButtons {
@@ -54,4 +58,8 @@
   flex-direction: column;
 
   height: 100%;
+
+  button {
+    background-color: orange;
+  }
 }

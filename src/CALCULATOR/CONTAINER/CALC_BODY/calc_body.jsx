@@ -1,10 +1,10 @@
 import ButtonsContainer from "../BUTTON/buttonsContainer";
 import "./calc_body.scss";
 
-const CalculatorContainer = () => {
+const CalculatorContainer = ({ val, setVal }) => {
   return (
     <div className="calculatorContainer">
-      <ButtonsContainer />
+      <ButtonsContainer val={val} setVal={setVal} />
     </div>
   );
 };
