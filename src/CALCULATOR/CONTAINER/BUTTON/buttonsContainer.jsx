@@ -31,27 +31,65 @@ const NumberButtons = ({ val, setVal }) => {
 };
 
 const MethodButtonsTop = ({ val, setVal, initialNumber, setInitialNumber }) => {
-  const methods = ["+/-", "%"];
+  const [resetClicked, setResetClicked] = useState(false);
+  const [resetButton, setResetButton] = useState("AC");
 
   // AC > C
   // AC reset current input
   // C resets whole calculator
 
-  let showClear = val > 0 || initialNumber;
+  useEffect(() => {
+    if (!resetClicked && +val) {
+      setResetButton("C");
+    }
+  }, [val, initialNumber]);
+
+  // show C if
+  // Any number is clicked (val has any value)
+
+  // Show AC if
+  // Nothing is in calculator
+  // val has no value
 
   const handleReset = () => {
-    if (val && !initialNumber) {
+    setResetClicked(true);
+    if (resetButton === "C") {
+      setResetButton("AC");
       setVal("0");
     }
-    console.log(val, initialNumber);
+
+    if (resetButton === "AC") {
+      setVal("0");
+      setInitialNumber("0");
+    }
+
+    setResetClicked(false);
+  };
+
+  const convertToNegative = () => {
+    let convertAmount = initialNumber - initialNumber - initialNumber;
+    setInitialNumber(convertAmount);
+  };
+
+  const convertProcent = () => {
+    let convertToProcent = val / 100;
+    if (!initialNumber) {
+      setVal(convertToProcent);
+    } else if (initialNumber) {
+      let preCalc = initialNumber * convertToProcent;
+      setVal(preCalc);
+      if (preCalc) {
+        setInitialNumber(+preCalc + +initialNumber);
+      }
+    }
+    setVal("0");
   };
 
   return (
     <div className="methodTopButtons">
-      <Button method={handleReset}>{showClear ? "C" : "AC"}</Button>
-      {methods.map((t, i) => (
-        <Button key={i}>{t}</Button>
-      ))}
+      <Button method={handleReset}>{resetButton}</Button>
+      <Button method={convertToNegative}>{"+/-"}</Button>
+      <Button method={convertProcent}>{"%"}</Button>
     </div>
   );
 };
@@ -83,7 +121,6 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
   };
 
   useEffect(() => {
-    // console.log(+val, currentOperator, +initialNumber);
     if (!initialNumber) {
       setInitialNumber(val);
     }
@@ -114,8 +151,6 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
     setCurrentOperator(o);
     handleInitialNumber();
   };
-
-  console.log(history);
 
   return (
     <div className="buttonsContainer">
