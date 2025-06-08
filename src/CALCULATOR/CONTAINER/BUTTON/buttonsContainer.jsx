@@ -30,11 +30,25 @@ const NumberButtons = ({ val, setVal }) => {
   );
 };
 
-const MethodButtonsTop = () => {
-  const methods = ["C", "+/-", "%"];
+const MethodButtonsTop = ({ val, setVal, initialNumber, setInitialNumber }) => {
+  const methods = ["+/-", "%"];
+
+  // AC > C
+  // AC reset current input
+  // C resets whole calculator
+
+  let showClear = val > 0 || initialNumber;
+
+  const handleReset = () => {
+    if (val && !initialNumber) {
+      setVal("0");
+    }
+    console.log(val, initialNumber);
+  };
 
   return (
     <div className="methodTopButtons">
+      <Button method={handleReset}>{showClear ? "C" : "AC"}</Button>
       {methods.map((t, i) => (
         <Button key={i}>{t}</Button>
       ))}
@@ -43,7 +57,7 @@ const MethodButtonsTop = () => {
 };
 
 const MethodButtons = ({ handleMethod, equalsClicked }) => {
-  const methods = ["+", "-", "x", "/"];
+  const methods = ["/", "x", "-", "+"];
 
   return (
     <div className="methodButtonsRight">
@@ -57,9 +71,8 @@ const MethodButtons = ({ handleMethod, equalsClicked }) => {
   );
 };
 
-const ButtonsContainer = ({ val, setVal }) => {
+const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
   const [currentOperator, setCurrentOperator] = useState("");
-  const [initialNumber, setInitialNumber] = useState(null);
   const [history, setHistory] = useState([]);
 
   const operations = {
@@ -80,15 +93,12 @@ const ButtonsContainer = ({ val, setVal }) => {
 
   const handleInitialNumber = () => {
     if (initialNumber) {
-      console.log(val, initialNumber);
       let value = operations[currentOperator](+val, +initialNumber);
-      console.log(value);
       setInitialNumber(value);
     }
   };
 
   const equalsClicked = () => {
-    console.log(val, currentOperator, initialNumber);
     setVal(operations[currentOperator](+val, +initialNumber));
     setInitialNumber(null);
   };
@@ -102,7 +112,6 @@ const ButtonsContainer = ({ val, setVal }) => {
       },
     ]);
     setCurrentOperator(o);
-
     handleInitialNumber();
   };
 
@@ -111,7 +120,12 @@ const ButtonsContainer = ({ val, setVal }) => {
   return (
     <div className="buttonsContainer">
       <div className="mainButtons">
-        <MethodButtonsTop />
+        <MethodButtonsTop
+          val={val}
+          setVal={setVal}
+          initialNumber={initialNumber}
+          setInitialNumber={setInitialNumber}
+        />
         <NumberButtons val={val} setVal={setVal} />
       </div>
       <div className="sideButtons">

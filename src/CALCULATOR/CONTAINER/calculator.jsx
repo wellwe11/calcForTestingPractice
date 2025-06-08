@@ -7,11 +7,17 @@ import { useState } from "react";
 
 const Calculator = () => {
   const [val, setVal] = useState(null);
+  const [initialNumber, setInitialNumber] = useState(null);
 
   return (
     <div className="calculator">
-      <InputContainer val={val} />
-      <CalculatorContainer val={val} setVal={setVal} />
+      <InputContainer val={val} initialNumber={initialNumber} />
+      <CalculatorContainer
+        val={val}
+        setVal={setVal}
+        initialNumber={initialNumber}
+        setInitialNumber={setInitialNumber}
+      />
     </div>
   );
 };
