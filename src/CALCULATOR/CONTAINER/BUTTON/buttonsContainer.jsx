@@ -67,8 +67,15 @@ const MethodButtonsTop = ({ val, setVal, initialNumber, setInitialNumber }) => {
   };
 
   const convertToNegative = () => {
-    let convertAmount = initialNumber - initialNumber - initialNumber;
-    setInitialNumber(convertAmount);
+    let convertAmountVal = val - val - val;
+    console.log(val, initialNumber, convertAmountVal);
+    if (!initialNumber) {
+      setVal(convertAmountVal);
+    } else {
+      setVal(convertAmountVal);
+      setInitialNumber(+initialNumber + +convertAmountVal);
+    }
+    setVal("0");
   };
 
   const convertProcent = () => {
@@ -80,9 +87,9 @@ const MethodButtonsTop = ({ val, setVal, initialNumber, setInitialNumber }) => {
       setVal(preCalc);
       if (preCalc) {
         setInitialNumber(+preCalc + +initialNumber);
+        setVal("0");
       }
     }
-    setVal("0");
   };
 
   return (
