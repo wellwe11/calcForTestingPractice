@@ -10,7 +10,7 @@ const Calculator = () => {
   const [initialNumber, setInitialNumber] = useState(null);
 
   return (
-    <div className="calculator">
+    <div className="calculator" data-testid="calculatorContainer">
       <InputContainer val={val} initialNumber={initialNumber} />
       <CalculatorContainer
         val={val}

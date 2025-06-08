@@ -5,10 +5,11 @@ import { useEffect, useState } from "react";
 
 const NumberButtons = ({ val, setVal }) => {
   const handleVal = (e) => {
-    let input = e === 1 ? "," : e > 0 ? e - 1 : e;
+    let input = e === 1 ? "." : e > 0 ? e - 1 : e;
     if (val === "0") {
       setVal(input);
     } else {
+      console.log(val);
       setVal((prev) => (prev += `${input}`));
     }
   };
@@ -23,7 +24,7 @@ const NumberButtons = ({ val, setVal }) => {
           key={i}
           onClick={() => handleVal(i)}
         >
-          <Button key={i}>{i === 1 ? "," : i > 0 ? i - 1 : i}</Button>
+          <Button key={i}>{i === 1 ? "." : i > 0 ? i - 1 : i}</Button>
         </div>
       ))}
     </div>
@@ -160,7 +161,7 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
   };
 
   return (
-    <div className="buttonsContainer">
+    <div className="buttonsContainer" data-testid="buttonsContainer">
       <div className="mainButtons">
         <MethodButtonsTop
           val={val}
