@@ -9,8 +9,11 @@ const NumberButtons = ({ val, setVal }) => {
     if (val === "0") {
       setVal(input);
     } else {
-      console.log(val);
-      setVal((prev) => (prev += `${input}`));
+      if (input === "." && !val.toString().split("").includes(".")) {
+        setVal((prev) => (prev += `${input}`));
+      } else if (input !== ".") {
+        setVal((prev) => (prev += `${input}`));
+      }
     }
   };
 
@@ -123,7 +126,7 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
 
   const operations = {
     "+": (a, b) => a + b,
-    "-": (a, b) => b - a,
+    "-": (a, b) => a - b,
     x: (a, b) => a * b,
     "/": (a, b) => a / b,
   };
@@ -138,17 +141,65 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
 
   const handleInitialNumber = () => {
     if (initialNumber) {
-      let value = operations[currentOperator](+val, +initialNumber);
-      setInitialNumber(value);
+      if (currentOperator === "+" || currentOperator === "-") {
+        let value = operations[currentOperator](+val, +initialNumber);
+        setInitialNumber(value);
+      }
+
+      if (currentOperator === "/" || currentOperator === "x") {
+        equalsClicked();
+      }
     }
   };
 
   const equalsClicked = () => {
-    setVal(operations[currentOperator](+val, +initialNumber));
-    setInitialNumber(null);
+    console.log(val, initialNumber, history);
+    if ((!val && !initialNumber) || !history) return;
+
+    let copyHistory = [
+      ...history.map((i) => ({ ...i })),
+      { value: val, operator: null },
+    ];
+
+    for (let i = 0; i < copyHistory.length; i++) {
+      const currentCalc = copyHistory[i];
+      if (!currentCalc.value) continue;
+
+      if (currentCalc.operator === "x" || currentCalc.operations === "/") {
+        let nextObject = copyHistory[i + 1];
+
+        const value = operations[currentCalc.operator](
+          currentCalc.value,
+          nextObject.value
+        );
+
+        copyHistory.splice(i, 2, {
+          operator: nextObject.operator,
+          value: value,
+        });
+      }
+    }
+
+    console.log(copyHistory);
+
+    let result = copyHistory[0].value;
+    for (let i = 0; i < copyHistory.length - 1; i++) {
+      const op = copyHistory[i]?.operator;
+      const nextVal = +copyHistory[i + 1]?.value || +copyHistory[i]?.value;
+
+      if (!isNaN(nextVal)) {
+        console.log(result, nextVal);
+        result = operations[op](+result, +nextVal);
+      }
+    }
+
+    setInitialNumber("");
+    return setVal(result);
   };
 
   const handleMethod = (o) => {
+    console.log(val);
+    setCurrentOperator(o);
     setHistory((prevHistory) => [
       ...prevHistory,
       {
@@ -156,7 +207,6 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
         operator: o,
       },
     ]);
-    setCurrentOperator(o);
     handleInitialNumber();
   };
 
