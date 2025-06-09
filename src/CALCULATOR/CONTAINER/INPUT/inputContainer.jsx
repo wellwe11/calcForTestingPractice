@@ -1,11 +1,9 @@
 import "./inputContainer.scss";
 
 const InputContainer = ({ val, initialNumber, valueAboveZero }) => {
-  console.log(val, initialNumber);
   return (
     <div className="inputContainer">
       <h1 className="inputText">
-        {!valueAboveZero ? "-" : ""}
         {!initialNumber
           ? val
             ? val

@@ -214,3 +214,53 @@ describe("user calculates with decimals", () => {
     ).toHaveTextContent("1.1");
   });
 });
+
+// tests to implement
+/**
+ * ✅ Basic Rendering
+✅ Calculator mounts without crashing.
+
+✅ Display (e.g., heading or screen) shows initial value (usually 0).
+
+✅ All essential buttons render (numbers, operators, equals, clear).
+
+🔢 Button Interaction
+✅ Clicking a number updates the display.
+
+✅ Clicking multiple numbers appends digits correctly (1, then 2 → 12).
+
+✅ Clicking decimal (.) works and doesn’t allow multiple decimals.
+
+✅ Clicking clear (C or AC) resets the display.
+
+➕➖✖️➗ Operator Logic
+✅ Chaining operations like 5 + 2 * 3 results in correct order of operations.
+
+✅ Pressing an operator without a number doesn’t crash the app.
+
+✅ Pressing = with no input should not crash or update anything.
+
+✅ Operations with negative numbers (e.g., -5 + 3) work.
+
+✅ Pressing = repeatedly repeats the last operation (optional behavior, if implemented).
+
+❗ Edge Cases
+✅ Input like 5 + = repeats the last number (5 + 5).
+
+✅ Prevents input like .. or 1..2.
+
+✅ Proper rounding (e.g., 0.1 + 0.2 should be 0.3 if Math.round() is used).
+
+✅ Division by zero displays error or handles gracefully (e.g., ∞ or Error).
+
+✅ Leading zero handling: typing 0005 should show 5.
+
+🔄 State & Reset
+✅ C clears the current input but retains history (if supported).
+
+✅ AC clears all input and history.
+
+✅ After pressing =, a new number starts a fresh expression.
+
+
+ */

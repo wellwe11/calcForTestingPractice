@@ -180,7 +180,7 @@ const ButtonsContainer = ({
 
       if (
         (currentCalc.operator === "x" || currentCalc.operations === "/") &&
-        history?.length > 1
+        history?.length > 0
       ) {
         let nextObject = copyHistory[i + 1];
 
@@ -198,11 +198,11 @@ const ButtonsContainer = ({
 
     let result = copyHistory[0].value;
     for (let i = 0; i < copyHistory.length - 1; i++) {
-      const op = copyHistory[i]?.operator;
+      const op = copyHistory[i]?.operator || "+";
       const nextVal = +copyHistory[i + 1]?.value || +copyHistory[i]?.value;
 
       if (!isNaN(nextVal)) {
-        result = operations[op](+result, +nextVal);
+        result = operations[op](+copyHistory[i].value, +nextVal);
       }
 
       setInitialNumber("");
@@ -222,8 +222,6 @@ const ButtonsContainer = ({
     setCurrentOperator(o);
     turnNegative(o);
     handleInitialNumber();
-
-    console.log(val, initialNumber, currentOperator);
   };
 
   const turnNegative = (o) => {
