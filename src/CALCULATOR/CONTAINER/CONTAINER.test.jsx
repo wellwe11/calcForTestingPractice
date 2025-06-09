@@ -76,6 +76,17 @@ describe("user interacts with calculator", () => {
       within(calculator).getByRole("heading", { level: 1 })
     ).toHaveTextContent("15");
   });
+
+  it("user clicks 5, -, =, = and it should render -15", async () => {
+    await user.click(screen.getByRole("button", { name: "5" }));
+    await user.click(screen.getByRole("button", { name: "-" }));
+    await user.click(screen.getByRole("button", { name: "=" }));
+    await user.click(screen.getByRole("button", { name: "=" }));
+
+    expect(
+      within(calculator).getByRole("heading", { level: 1 })
+    ).toHaveTextContent("-5");
+  });
 });
 
 describe("user perform simple calculations", () => {
@@ -97,6 +108,18 @@ describe("user perform simple calculations", () => {
     expect(
       within(calculator).getByRole("heading", { level: 1 })
     ).toHaveTextContent("18");
+  });
+
+  it("user interacts with subtraction", async () => {
+    await user.click(screen.getByRole("button", { name: "1" }));
+    await user.click(screen.getByRole("button", { name: "2" }));
+    await user.click(screen.getByRole("button", { name: "-" }));
+    await user.click(screen.getByRole("button", { name: "6" }));
+    await user.click(screen.getByRole("button", { name: "=" }));
+
+    expect(
+      within(calculator).getByRole("heading", { level: 1 })
+    ).toHaveTextContent("6");
   });
 
   it("writing 00002 should render as 2", async () => {

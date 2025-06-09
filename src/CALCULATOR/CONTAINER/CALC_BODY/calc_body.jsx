@@ -6,6 +6,8 @@ const CalculatorContainer = ({
   setVal,
   initialNumber,
   setInitialNumber,
+  valueAboveZero,
+  setValueAboveZero,
 }) => {
   return (
     <div className="calculatorContainer">
@@ -14,6 +16,8 @@ const CalculatorContainer = ({
         setVal={setVal}
         initialNumber={initialNumber}
         setInitialNumber={setInitialNumber}
+        valueAboveZero={valueAboveZero}
+        setValueAboveZero={setValueAboveZero}
       />
     </div>
   );

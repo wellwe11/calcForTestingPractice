@@ -58,8 +58,10 @@
   flex-direction: column;
 
   height: 100%;
-
-  button {
-    background-color: orange;
+  .buttonContainer {
+    height: 100%;
+    button {
+      background-color: orange;
+    }
   }
 }

@@ -8,15 +8,22 @@ import { useState } from "react";
 const Calculator = () => {
   const [val, setVal] = useState(null);
   const [initialNumber, setInitialNumber] = useState(null);
+  const [valueAboveZero, setValueAboveZero] = useState(true);
 
   return (
     <div className="calculator" data-testid="calculatorContainer">
-      <InputContainer val={val} initialNumber={initialNumber} />
+      <InputContainer
+        val={val}
+        initialNumber={initialNumber}
+        valueAboveZero={valueAboveZero}
+      />
       <CalculatorContainer
         val={val}
         setVal={setVal}
         initialNumber={initialNumber}
         setInitialNumber={setInitialNumber}
+        valueAboveZero={valueAboveZero}
+        setValueAboveZero={setValueAboveZero}
       />
     </div>
   );

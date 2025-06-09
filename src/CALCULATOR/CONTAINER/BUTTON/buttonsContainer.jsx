@@ -38,22 +38,11 @@ const MethodButtonsTop = ({ val, setVal, initialNumber, setInitialNumber }) => {
   const [resetClicked, setResetClicked] = useState(false);
   const [resetButton, setResetButton] = useState("AC");
 
-  // AC > C
-  // AC reset current input
-  // C resets whole calculator
-
   useEffect(() => {
     if (!resetClicked && +val) {
       setResetButton("C");
     }
   }, [val, initialNumber]);
-
-  // show C if
-  // Any number is clicked (val has any value)
-
-  // Show AC if
-  // Nothing is in calculator
-  // val has no value
 
   const handleReset = () => {
     setResetClicked(true);
@@ -72,14 +61,13 @@ const MethodButtonsTop = ({ val, setVal, initialNumber, setInitialNumber }) => {
 
   const convertToNegative = () => {
     let convertAmountVal = val - val - val;
-    console.log(val, initialNumber, convertAmountVal);
     if (!initialNumber) {
       setVal(convertAmountVal);
     } else {
       setVal(convertAmountVal);
       setInitialNumber(+initialNumber + +convertAmountVal);
+      setVal("");
     }
-    setVal("0");
   };
 
   const convertProcent = () => {
@@ -105,22 +93,37 @@ const MethodButtonsTop = ({ val, setVal, initialNumber, setInitialNumber }) => {
   );
 };
 
-const MethodButtons = ({ handleMethod, equalsClicked }) => {
+const MethodButtons = ({ handleMethod, equalsClicked, currentOperator }) => {
   const methods = ["/", "x", "-", "+"];
 
   return (
     <div className="methodButtonsRight">
       {methods.map((o, i) => (
-        <Button method={() => handleMethod(o)} key={i}>
-          {o}
-        </Button>
+        <div
+          key={i}
+          className="buttonContainer"
+          style={{ border: currentOperator === o ? "1px solid red" : "" }}
+        >
+          <Button method={() => handleMethod(o)} key={i}>
+            {o}
+          </Button>
+        </div>
       ))}
-      <Button method={equalsClicked}>{"="}</Button>
+      <div className="buttonContainer">
+        <Button method={equalsClicked}>{"="}</Button>
+      </div>
     </div>
   );
 };
 
-const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
+const ButtonsContainer = ({
+  val,
+  setVal,
+  initialNumber,
+  setInitialNumber,
+  valueAboveZero,
+  setValueAboveZero,
+}) => {
   const [currentOperator, setCurrentOperator] = useState("");
   const [history, setHistory] = useState([]);
 
@@ -143,18 +146,28 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
     if (initialNumber) {
       if (currentOperator === "+" || currentOperator === "-") {
         let value = operations[currentOperator](+val, +initialNumber);
-        setInitialNumber(value);
+        if (!valueAboveZero) {
+          setInitialNumber(+value - +value - +value);
+        }
+
+        if (valueAboveZero) {
+          setInitialNumber(value);
+        }
       }
 
       if (currentOperator === "/" || currentOperator === "x") {
         equalsClicked();
       }
+      setValueAboveZero(true);
     }
   };
 
   const equalsClicked = () => {
-    console.log(val, initialNumber, history);
-    if ((!val && !initialNumber) || !history) return;
+    if (!initialNumber || !history) {
+      return setVal(
+        operations?.[history[0]?.operator || "+"](+val, +history[0]?.value)
+      );
+    }
 
     let copyHistory = [
       ...history.map((i) => ({ ...i })),
@@ -165,7 +178,10 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
       const currentCalc = copyHistory[i];
       if (!currentCalc.value) continue;
 
-      if (currentCalc.operator === "x" || currentCalc.operations === "/") {
+      if (
+        (currentCalc.operator === "x" || currentCalc.operations === "/") &&
+        history?.length > 1
+      ) {
         let nextObject = copyHistory[i + 1];
 
         const value = operations[currentCalc.operator](
@@ -180,26 +196,21 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
       }
     }
 
-    console.log(copyHistory);
-
     let result = copyHistory[0].value;
     for (let i = 0; i < copyHistory.length - 1; i++) {
       const op = copyHistory[i]?.operator;
       const nextVal = +copyHistory[i + 1]?.value || +copyHistory[i]?.value;
 
       if (!isNaN(nextVal)) {
-        console.log(result, nextVal);
         result = operations[op](+result, +nextVal);
       }
-    }
 
-    setInitialNumber("");
+      setInitialNumber("");
+    }
     return setVal(result);
   };
 
   const handleMethod = (o) => {
-    console.log(val);
-    setCurrentOperator(o);
     setHistory((prevHistory) => [
       ...prevHistory,
       {
@@ -207,7 +218,24 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
         operator: o,
       },
     ]);
+
+    setCurrentOperator(o);
+    turnNegative(o);
     handleInitialNumber();
+
+    console.log(val, initialNumber, currentOperator);
+  };
+
+  const turnNegative = (o) => {
+    if (+val === 0) {
+      if (o === "+") {
+        setValueAboveZero(true);
+      }
+
+      if (o === "-") {
+        setValueAboveZero(false);
+      }
+    }
   };
 
   return (
@@ -225,6 +253,7 @@ const ButtonsContainer = ({ val, setVal, initialNumber, setInitialNumber }) => {
         <MethodButtons
           handleMethod={handleMethod}
           equalsClicked={equalsClicked}
+          currentOperator={currentOperator}
         />
       </div>
     </div>
