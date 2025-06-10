@@ -9,7 +9,7 @@ const InputContainer = ({ val, initialNumber, valueAboveZero }) => {
             ? val
             : 0
           : initialNumber
-          ? val > 0
+          ? +val
             ? val
             : initialNumber
           : val === "."
