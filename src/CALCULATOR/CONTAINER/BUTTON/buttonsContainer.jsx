@@ -128,6 +128,8 @@ const ButtonsContainer = ({
 }) => {
   const [currentOperator, setCurrentOperator] = useState("");
   const [history, setHistory] = useState([]);
+  const [equalsClickedCount, setEqualsClickedCount] = useState(0);
+  const [tempVal, setTempVal] = useState(0);
 
   const operations = {
     "+": (a, b) => a + b,
@@ -135,7 +137,6 @@ const ButtonsContainer = ({
     x: (a, b) => a * b,
     "/": (a, b) => a / b,
   };
-
   useEffect(() => {
     if (!initialNumber) {
       setInitialNumber(val);
@@ -165,73 +166,96 @@ const ButtonsContainer = ({
   };
 
   const equalsClicked = () => {
-    if (initialNumber) {
-      let copyHistory = [
-        ...history.map((i) => ({ ...i })),
-        { value: +val, operator: null },
-      ];
+    console.log(initialNumber);
 
-      for (let i = 0; i < copyHistory.length; i++) {
-        const currentCalc = copyHistory[i];
-        if (!currentCalc.value) continue;
+    setEqualsClickedCount((prev) => prev + 1);
+    let copyHistory = [
+      ...history.map((i) => ({ ...i })),
+      { value: +val, operator: null },
+    ];
 
-        if (
-          (currentCalc.operator === "x" || currentCalc.operations === "/") &&
-          history?.length > 0
-        ) {
-          let nextObject = copyHistory[i + 1];
+    for (let i = 0; i < copyHistory.length; i++) {
+      const currentCalc = copyHistory[i];
+      if (!currentCalc.value) continue;
 
-          const value = operations[currentCalc.operator](
-            currentCalc.value,
-            nextObject.value
-          );
+      if (
+        (currentCalc.operator === "x" || currentCalc.operator === "/") &&
+        history?.length > 0
+      ) {
+        let nextObject = copyHistory[i + 1];
 
-          copyHistory.splice(i, 2, {
-            operator: nextObject.operator,
-            value: value,
-          });
+        if (equalsClickedCount < 1) {
+          setTempVal(copyHistory[i + 1]);
         }
-      }
 
-      const trimHistory = () => {
-        let op = copyHistory[0]?.operator;
+        const value = operations[currentCalc.operator](
+          currentCalc.value,
+          nextObject.value
+        );
 
-        if (op === null) return setVal(+copyHistory[0]?.value || 0);
-
-        const currVal = +copyHistory[0].value;
-        const nextVal = +copyHistory[1].value;
-
-        const result = operations?.[op](currVal, nextVal);
-
-        const nextOperator = copyHistory[1].operator;
-
-        copyHistory.splice(0, 2, {
-          value: result,
-          operator: nextOperator || currentOperator,
+        copyHistory.splice(i, 2, {
+          operator: nextObject.operator,
+          value: value,
         });
-
-        setInitialNumber(result);
-      };
-
-      while (copyHistory.length > 1) {
-        trimHistory();
       }
-      setVal(0);
     }
 
-    if (val === 0 && history.length > 0) {
-      console.log(history, val, initialNumber);
+    const trimHistory = () => {
+      let op = copyHistory[0]?.operator;
+
+      if (op === null) return setVal(+copyHistory[0]?.value || 0);
+
+      const currVal = +copyHistory[0].value;
+      const nextVal = +copyHistory[1].value;
+
+      const result = operations?.[op](currVal, nextVal);
+
+      const nextOperator = copyHistory[1].operator;
+
+      copyHistory.splice(0, 2, {
+        value: result,
+        operator: nextOperator || currentOperator,
+      });
+
+      setInitialNumber(result);
+    };
+
+    while (copyHistory.length > 1) {
+      trimHistory();
+
+      if (copyHistory.length === 1) {
+        setEqualsClickedCount(1);
+        break;
+      }
+    }
+
+    if (equalsClickedCount > 0) {
+      console.log(
+        "val:",
+        val,
+        "initialNumber:",
+        initialNumber,
+        "tempVal:",
+        tempVal,
+        "history:",
+        history,
+        "copyHistory:",
+        copyHistory
+      );
+
       setInitialNumber(
-        operations[currentOperator](
-          initialNumber,
-          history[history.length - 1].value || 0
+        operations[copyHistory[0].operator || history[0].operator](
+          +initialNumber,
+          +tempVal?.value
         )
       );
     }
-    return setVal(0);
+
+    setVal(0);
   };
 
   const handleMethod = (o) => {
+    setEqualsClickedCount(0);
     setCurrentOperator(o);
     setHistory((prevHistory) => [
       ...prevHistory,
